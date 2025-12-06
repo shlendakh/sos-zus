@@ -12,3 +12,26 @@ generator client {
 datasource db {
   provider = "postgresql"
 }
+
+model Case {
+  id          String @id @default(cuid())
+  title       String
+  description String
+
+  accidents Accident[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Accident {
+  id     String @id @default(cuid())
+  caseId String
+
+  file Bytes
+
+  case Case @relation(fields: [caseId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
