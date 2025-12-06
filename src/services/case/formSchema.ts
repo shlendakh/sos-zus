@@ -1,4 +1,4 @@
-import { file, z } from "zod"
+import { z } from "zod"
 import { zfd } from "zod-form-data"
 import { DocumentType } from "../../../prisma/prisma/enums"
 
@@ -34,6 +34,15 @@ export const formSchema = zfd.formData({
   isWorkAccident: zfd.checkbox(),
   isVictimFault: zfd.text(),
   isDrunk: zfd.text(),
+
+  witness: zfd.repeatable(
+    z.array(
+      z.object({
+        name: zfd.text(),
+        contact: zfd.text(),
+      }),
+    ),
+  ),
 
   file: zfd.file(),
 })

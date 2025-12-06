@@ -1,13 +1,10 @@
 "use server"
 import z from "zod"
 import { formSchema } from "./formSchema"
-import type { FormSchema } from "./formSchema"
 import prismaClient from "@/lib/prisma"
 
 export async function saveCaseForm(args: z.input<typeof formSchema>) {
   const data = formSchema.parse(args)
-
-  console.log("Parsed form data:", data)
 
   await prismaClient.case.create({
     data: {
@@ -55,7 +52,12 @@ export async function saveCaseForm(args: z.input<typeof formSchema>) {
           nameOfReporter: data.accidentNameOfReporter,
           info: data.accidentDescription,
           witnesses: {
-            create: [],
+            createMany: {
+              data: data.witness.map((w) => ({
+                name: w.name,
+                contact: w.contact,
+              })),
+            },
           },
           isWorkAccident: data.isWorkAccident,
           isVictimFault: data.isVictimFault,
@@ -64,4 +66,8 @@ export async function saveCaseForm(args: z.input<typeof formSchema>) {
       },
     },
   })
+
+  return {
+    errors: {},
+  }
 }
