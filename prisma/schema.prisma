@@ -23,12 +23,14 @@ model Case {
   payerInfoId  String
   victimInfoId String
 
+  accidentInfo AccidentInfo @relation(fields: [accidentInfoId], references: [id])
+
   cardOfAccident   File?   @relation(fields: [cardOfAccidentId], references: [id])
   cardOfAccidentId String?
 
-  createdAt     DateTime       @default(now())
-  updatedAt     DateTime       @updatedAt
-  accidentInfos AccidentInfo[]
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  accidentInfoId String
 }
 
 // MARK: Płatnik
@@ -81,8 +83,7 @@ model AccidentInfo {
   isVictimFault  String
   isDrunk        String
 
-  case   Case   @relation(fields: [caseId], references: [id])
-  caseId String
+  cases Case[]
 }
 
 // MARK: Utils
