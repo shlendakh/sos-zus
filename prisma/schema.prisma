@@ -14,24 +14,111 @@ datasource db {
 }
 
 model Case {
-  id          String @id @default(cuid())
-  title       String
-  description String
+  id         String  @id @default(cuid())
+  caseNumber String
+  comments   String? // Functionary notes
 
-  accidents Accident[]
+  payerInfo    PayerInfo  @relation(fields: [payerInfoId], references: [id])
+  victimInfo   VictimInfo @relation(fields: [victimInfoId], references: [id])
+  payerInfoId  String
+  victimInfoId String
+
+  cardOfAccident   File?   @relation(fields: [cardOfAccidentId], references: [id])
+  cardOfAccidentId String?
+
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  accidentInfos AccidentInfo[]
+}
+
+// MARK: Płatnik
+model PayerInfo {
+  id             String       @id @default(cuid())
+  payerName      String // Name & surname or name of the company
+  documentType   DocumentType
+  documentNumber String
+
+  nip   String
+  regon String?
+  pesel String?
+
+  address   Address @relation(fields: [addressId], references: [id])
+  addressId String
+  cases     Case[]
+}
+
+// MARK: Poszkodowany
+model VictimInfo {
+  id    String @id @default(cuid())
+  name  String
+  pesel String
+
+  dateOfBirth  DateTime
+  placeOfBirth String
+
+  documentType   DocumentType
+  documentNumber String
+
+  insuranceTitle String
+
+  address   Address @relation(fields: [addressId], references: [id])
+  addressId String
+  cases     Case[]
+}
+
+// MARK: Accident information
+
+model AccidentInfo {
+  id             String   @id @default(cuid())
+  date           DateTime
+  nameOfReporter String
+
+  info String // All details about the accident
+
+  witnesses Witness[]
+
+  isWorkAccident Boolean
+  isVictimFault  String
+  isDrunk        String
+
+  case   Case   @relation(fields: [caseId], references: [id])
+  caseId String
+}
+
+// MARK: Utils
+
+enum DocumentType {
+  PERSONAL_ID
+  PASSPORT
+}
+
+model Address {
+  id         String @id @default(cuid())
+  street     String
+  city       String
+  postalCode String
+  country    String
+
+  reporterInfos PayerInfo[]
+  victimInfos   VictimInfo[]
+}
+
+model File {
+  id String @id @default(cuid())
+
+  file Bytes
+
+  cases Case[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
 
-model Accident {
-  id     String @id @default(cuid())
-  caseId String
+model Witness {
+  id      String @id @default(cuid())
+  name    String
+  contact String
 
-  file Bytes
-
-  case Case @relation(fields: [caseId], references: [id])
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  accidentInfo   AccidentInfo @relation(fields: [accidentInfoId], references: [id])
+  accidentInfoId String
 }
