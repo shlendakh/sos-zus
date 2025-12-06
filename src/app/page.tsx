@@ -15,12 +15,6 @@ export default function Home() {
 
   const invoices = [
   {
-    invoice: "INV001",
-    paymentStatus: "Paid",
-    totalAmount: "$250.00",
-    paymentMethod: "Credit Card",
-  },
-  {
     invoice: "INV002",
     paymentStatus: "Pending",
     totalAmount: "$150.00",
