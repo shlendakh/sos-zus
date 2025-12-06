@@ -19,142 +19,60 @@ import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 
+import { saveCaseForm } from "./saveCaseForm";
+
 // -------------------------------------------------------
-//  RZĄDOWY STYL INPUT (GOV.PL)
+//  GOV.PL style
 // -------------------------------------------------------
 const govInputClass =
   "border border-gray-500 rounded-none focus-visible:ring-2 focus-visible:ring-blue-600 focus-visible:ring-offset-0";
 
 // -------------------------------------------------------
-//  ZOD SCHEMA — POLSKIE KOMUNIKATY BŁĘDÓW
+//  ZOD SCHEMA (frontend mirror)
 // -------------------------------------------------------
 const formSchema = z.object({
-  caseNumber: z
-    .string()
-    .min(3, "Numer sprawy musi zawierać co najmniej 3 znaki")
-    .nonempty("Numer sprawy jest wymagany"),
+  caseNumber: z.string().min(3, "Numer sprawy jest wymagany"),
 
-  payerName: z
-    .string()
-    .min(2, "Nazwa płatnika musi zawierać co najmniej 2 znaki")
-    .nonempty("Nazwa płatnika jest wymagana"),
-
-  payerDocumentType: z.enum(["PERSONAL_ID", "PASSPORT"], {
-    errorMap: () => ({ message: "Wybierz typ dokumentu" }),
-  }),
-
-  payerDocumentNumber: z
-    .string()
-    .min(3, "Numer dokumentu jest za krótki")
-    .nonempty("Numer dokumentu jest wymagany"),
-
-  payerNip: z
-    .string()
-    .length(10, "NIP musi zawierać 10 cyfr")
-    .nonempty("NIP jest wymagany"),
-
+  payerName: z.string().min(2, "Nazwa płatnika jest wymagana"),
+  payerDocumentType: z.enum(["PERSONAL_ID", "PASSPORT"]),
+  payerDocumentNumber: z.string().min(3),
+  payerNip: z.string().length(10, "NIP musi mieć 10 cyfr"),
   payerRegon: z.string().optional(),
   payerPesel: z.string().optional(),
 
-  payerStreet: z
-    .string()
-    .min(2, "Ulica jest za krótka")
-    .nonempty("Ulica jest wymagana"),
+  payerStreet: z.string().min(2),
+  payerCity: z.string().min(2),
+  payerPostalCode: z.string().min(3),
+  payerCountry: z.string().min(2),
 
-  payerCity: z
-    .string()
-    .min(2, "Miasto jest za krótkie")
-    .nonempty("Miasto jest wymagane"),
+  victimName: z.string().min(2),
+  victimPesel: z.string().length(11),
+  victimDateOfBirth: z.string(),
+  victimPlaceOfBirth: z.string().min(2),
+  victimDocumentType: z.enum(["PERSONAL_ID", "PASSPORT"]),
+  victimDocumentNumber: z.string().min(3),
+  insuranceTitle: z.string().min(3),
 
-  payerPostalCode: z
-    .string()
-    .min(3, "Kod pocztowy jest nieprawidłowy")
-    .nonempty("Kod pocztowy jest wymagany"),
+  victimStreet: z.string().min(2),
+  victimCity: z.string().min(2),
+  victimPostalCode: z.string().min(3),
+  victimCountry: z.string().min(2),
 
-  payerCountry: z
-    .string()
-    .min(2, "Kraj jest za krótki")
-    .nonempty("Kraj jest wymagany"),
-
-  victimName: z
-    .string()
-    .min(2, "Imię i nazwisko jest za krótkie")
-    .nonempty("Imię i nazwisko jest wymagane"),
-
-  victimPesel: z
-    .string()
-    .length(11, "PESEL musi zawierać 11 cyfr")
-    .nonempty("PESEL jest wymagany"),
-
-  victimDateOfBirth: z.string().nonempty("Data urodzenia jest wymagana"),
-
-  victimPlaceOfBirth: z
-    .string()
-    .min(2, "Miejsce urodzenia jest za krótkie")
-    .nonempty("Miejsce urodzenia jest wymagane"),
-
-  victimDocumentType: z.enum(["PERSONAL_ID", "PASSPORT"], {
-    errorMap: () => ({ message: "Wybierz typ dokumentu" }),
-  }),
-
-  victimDocumentNumber: z
-    .string()
-    .min(3, "Numer dokumentu jest za krótki")
-    .nonempty("Numer dokumentu jest wymagany"),
-
-  insuranceTitle: z
-    .string()
-    .min(3, "Tytuł ubezpieczenia jest za krótki")
-    .nonempty("Tytuł ubezpieczenia jest wymagany"),
-
-  victimStreet: z
-    .string()
-    .min(2, "Ulica jest za krótka")
-    .nonempty("Ulica jest wymagana"),
-
-  victimCity: z
-    .string()
-    .min(2, "Miasto jest za krótkie")
-    .nonempty("Miasto jest wymagane"),
-
-  victimPostalCode: z
-    .string()
-    .min(3, "Kod pocztowy jest nieprawidłowy")
-    .nonempty("Kod pocztowy jest wymagany"),
-
-  victimCountry: z
-    .string()
-    .min(2, "Kraj jest za krótki")
-    .nonempty("Kraj jest wymagany"),
-
-  accidentDate: z.string().nonempty("Data zdarzenia jest wymagana"),
-
-  reporterName: z
-    .string()
-    .min(2, "Nazwa zgłaszającego jest za krótka")
-    .nonempty("Zgłaszający jest wymagany"),
-
-  accidentInfo: z
-    .string()
-    .min(5, "Opis zdarzenia jest zbyt krótki")
-    .nonempty("Opis zdarzenia jest wymagany"),
+  accidentDate: z.string(),
+  reporterName: z.string().min(2),
+  accidentInfo: z.string().min(5),
 
   isWorkAccident: z.boolean(),
-  isVictimFault: z
-    .string()
-    .nonempty("Informacja o winie poszkodowanego jest wymagana"),
+  isVictimFault: z.string().min(2),
 
-  substancesStatus: z.enum(["no", "yes"], {
-    errorMap: () => ({ message: "Wybierz jedną z opcji" }),
-  }),
-
+  substancesStatus: z.enum(["no", "yes"]),
   substancesDetails: z.string().optional(),
 });
 
 type FormValues = z.infer<typeof formSchema>;
 
 // -------------------------------------------------------
-//  PAGE
+//  PAGE COMPONENT
 // -------------------------------------------------------
 export default function Page() {
   const form = useForm<FormValues>({
@@ -192,20 +110,31 @@ export default function Page() {
     },
   });
 
-  function onSubmit(values: FormValues) {
-    console.log("FORMULARZ →", values);
-    alert("Zgłoszenie zostało poprawnie wysłane.");
+  // -------------------------------------------------------
+  //  FORM SUBMIT — SEND TO BACKEND
+  // -------------------------------------------------------
+  async function onSubmit(values: FormValues) {
+    const fd = new FormData();
+
+    for (const [key, val] of Object.entries(values)) {
+      if (typeof val === "boolean") {
+        fd.append(key, val ? "true" : "false");
+      } else if (val !== undefined && val !== null) {
+        fd.append(key, val);
+      }
+    }
+
+    await saveCaseForm(fd);
+
+    alert("Zgłoszenie zostało zapisane w bazie danych.");
   }
 
+  // -------------------------------------------------------
+  //  RENDER
+  // -------------------------------------------------------
   return (
     <div className="max-w-4xl mx-auto py-12 space-y-12">
-      <h1 className="text-3xl font-bold text-gray-800">
-        Formularz zgłoszenia wypadku
-      </h1>
-      <p className="text-gray-700">
-        Wypełnij wszystkie pola zgodnie z prawdą. Pola obowiązkowe muszą być
-        uzupełnione.
-      </p>
+      <h1 className="text-3xl font-bold text-gray-900">Formularz zgłoszenia wypadku</h1>
 
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-12">
@@ -215,16 +144,10 @@ export default function Page() {
           --------------------------------------------------*/}
           <Card className="border border-gray-300 rounded-none">
             <CardHeader>
-              <CardTitle className="text-xl font-bold text-gray-800">
-                I. Dane sprawy
-              </CardTitle>
-              <p className="text-gray-600 text-sm">
-                Podstawowe informacje identyfikacyjne zgłoszenia.
-              </p>
+              <CardTitle className="text-xl font-bold">I. Dane sprawy</CardTitle>
             </CardHeader>
 
             <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-6">
-
               <FormField
                 control={form.control}
                 name="caseNumber"
@@ -238,7 +161,6 @@ export default function Page() {
                   </FormItem>
                 )}
               />
-
             </CardContent>
           </Card>
 
@@ -247,12 +169,7 @@ export default function Page() {
           --------------------------------------------------*/}
           <Card className="border border-gray-300 rounded-none">
             <CardHeader>
-              <CardTitle className="text-xl font-bold text-gray-800">
-                II. Dane płatnika
-              </CardTitle>
-              <p className="text-gray-600 text-sm">
-                Informacje o płatniku składek oraz jego adres.
-              </p>
+              <CardTitle className="text-xl font-bold">II. Dane płatnika</CardTitle>
             </CardHeader>
 
             <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -287,7 +204,6 @@ export default function Page() {
                         <option value="PASSPORT">Paszport</option>
                       </select>
                     </FormControl>
-                    <FormMessage />
                   </FormItem>
                 )}
               />
@@ -320,6 +236,7 @@ export default function Page() {
                 )}
               />
 
+              {/* OPTIONAL */}
               <FormField
                 control={form.control}
                 name="payerRegon"
@@ -412,12 +329,9 @@ export default function Page() {
           --------------------------------------------------*/}
           <Card className="border border-gray-300 rounded-none">
             <CardHeader>
-              <CardTitle className="text-xl font-bold text-gray-800">
+              <CardTitle className="text-xl font-bold">
                 III. Dane poszkodowanego
               </CardTitle>
-              <p className="text-gray-600 text-sm">
-                Informacje osobowe i adres poszkodowanego.
-              </p>
             </CardHeader>
 
             <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -579,12 +493,9 @@ export default function Page() {
           --------------------------------------------------*/}
           <Card className="border border-gray-300 rounded-none">
             <CardHeader>
-              <CardTitle className="text-xl font-bold text-gray-800">
+              <CardTitle className="text-xl font-bold">
                 IV. Informacje o zdarzeniu
               </CardTitle>
-              <p className="text-gray-600 text-sm">
-                Szczegółowy opis okoliczności zdarzenia.
-              </p>
             </CardHeader>
 
             <CardContent className="space-y-6">
@@ -648,7 +559,6 @@ export default function Page() {
                         onChange={(e) => field.onChange(e.target.checked)}
                       />
                     </FormControl>
-                    <FormMessage />
                   </FormItem>
                 )}
               />
@@ -701,7 +611,6 @@ export default function Page() {
                         </label>
                       </div>
                     </FormControl>
-                    <FormMessage />
                   </FormItem>
                 )}
               />
@@ -714,11 +623,7 @@ export default function Page() {
                     <FormItem>
                       <FormLabel>Opis stwierdzonych faktów</FormLabel>
                       <FormControl>
-                        <Textarea
-                          rows={3}
-                          {...field}
-                          className={govInputClass}
-                        />
+                        <Textarea rows={3} {...field} className={govInputClass} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -729,9 +634,7 @@ export default function Page() {
             </CardContent>
           </Card>
 
-          {/* -------------------------------------------------
-              SUBMIT
-          --------------------------------------------------*/}
+          {/* SUBMIT */}
           <div className="flex justify-end">
             <Button
               type="submit"
