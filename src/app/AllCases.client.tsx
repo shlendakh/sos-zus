@@ -1,47 +1,62 @@
 "use client"
 
+import { Card } from "@/components/ui/card"
+import { useQuery } from "@tanstack/react-query";
+import { fetchAllCases } from "@/services/cases/list-cases.actions";
+import { Spinner } from "@/components/ui/spinner";
+import NotFound from "@/components/ui/notfound";
+import {
+  Table,
+  TableBody,
+  TableCaption,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table"
+import Link from "next/link";
+
 const AllCases = () =>{
+
+    const { data, isError, isLoading } = useQuery({
+      queryKey: ["cases", "all"],
+      queryFn: () => fetchAllCases(),
+    })
+
+    if (isError) return <div>error</div>
+
+    if(isLoading) return (<main className="grid min-h-full place-items-center bg-white px-6 py-24 sm:py-32 lg:px-8">
+    <Spinner className="size-8 text-green-500" />
+  </main>)
+
+  if (!data) return <NotFound/>
+  
     return(
     <div>
-      {/* <Card className="w-full p-8">
+      <Card className="w-full p-8">
         <p className="mt-4 text-lg">
           Aplikacja do zarządzania i obsługi szkód w Zakładzie Ubezpieczeń Społecznych.
         </p>
       </Card>
 
       <Table>
-        <TableCaption>A list of your recent invoices.</TableCaption>
+        <TableCaption>lista spraw</TableCaption>
         <TableHeader>
           <TableRow>
-            <TableHead className="w-[100px]">Invoice</TableHead>
-            <TableHead>Status</TableHead>
-            <TableHead>Method</TableHead>
-            <TableHead className="text-right">Amount</TableHead>
+            <TableHead className="w-[100px]">numer case</TableHead>
+            <TableHead>przejdź</TableHead>
           </TableRow>
         </TableHeader>
 
         <TableBody>
-          {invoices.map((invoice) => (
-            <TableRow key={invoice.invoice}>
-              <TableCell className="font-medium">{invoice.invoice}</TableCell>
-              <TableCell>{invoice.paymentStatus}</TableCell>
-              <TableCell>{invoice.paymentMethod}</TableCell>
-              <TableCell className="text-right">{invoice.totalAmount}</TableCell>
+          {data.map((item) => (
+            <TableRow key={item.id}>
+              <TableCell className="font-medium">{item.id}</TableCell>
+              <TableCell className="font-medium"><Link href={`/case/${item.id}`}>link</Link></TableCell>
             </TableRow>
           ))}
         </TableBody>
-
-        <TableFooter>
-          <TableRow>
-            <TableCell colSpan={3}>Total</TableCell>
-            <TableCell className="text-right">$2,500.00</TableCell>
-          </TableRow>
-        </TableFooter>
       </Table>
-
-      <Link href="/form">
-        <Button variant="outline">Kilknij</Button>
-      </Link> */}
     </div>
     )
 }
