@@ -13,7 +13,6 @@ import {
 import Link from "next/link"
 
 export default function Home() {
-
   const invoices = [
     {
       invoice: "INV001",
@@ -103,4 +102,3 @@ export default function Home() {
     </div>
   )
 }
-

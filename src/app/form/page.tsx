@@ -1,8 +1,8 @@
-"use client";
+"use client"
 
-import { useForm } from "react-hook-form";
-import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form"
+import { z } from "zod"
+import { zodResolver } from "@hookform/resolvers/zod"
 
 import {
   Form,
@@ -11,19 +11,19 @@ import {
   FormLabel,
   FormField,
   FormMessage,
-} from "@/components/ui/form";
+} from "@/components/ui/form"
 
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Button } from "@/components/ui/button";
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
+import { Input } from "@/components/ui/input"
+import { Textarea } from "@/components/ui/textarea"
+import { Button } from "@/components/ui/button"
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card"
+import { Separator } from "@/components/ui/separator"
 
 // -------------------------------------------------------
 //  RZĄDOWY STYL INPUT (GOV.PL)
 // -------------------------------------------------------
 const govInputClass =
-  "border border-gray-500 rounded-none focus-visible:ring-2 focus-visible:ring-blue-600 focus-visible:ring-offset-0";
+  "border border-gray-500 rounded-none focus-visible:ring-2 focus-visible:ring-blue-600 focus-visible:ring-offset-0"
 
 // -------------------------------------------------------
 //  ZOD SCHEMA — POLSKIE KOMUNIKATY BŁĘDÓW
@@ -48,43 +48,28 @@ const formSchema = z.object({
     .min(3, "Numer dokumentu jest za krótki")
     .nonempty("Numer dokumentu jest wymagany"),
 
-  payerNip: z
-    .string()
-    .length(10, "NIP musi zawierać 10 cyfr")
-    .nonempty("NIP jest wymagany"),
+  payerNip: z.string().length(10, "NIP musi zawierać 10 cyfr").nonempty("NIP jest wymagany"),
 
   payerRegon: z.string().optional(),
   payerPesel: z.string().optional(),
 
-  payerStreet: z
-    .string()
-    .min(2, "Ulica jest za krótka")
-    .nonempty("Ulica jest wymagana"),
+  payerStreet: z.string().min(2, "Ulica jest za krótka").nonempty("Ulica jest wymagana"),
 
-  payerCity: z
-    .string()
-    .min(2, "Miasto jest za krótkie")
-    .nonempty("Miasto jest wymagane"),
+  payerCity: z.string().min(2, "Miasto jest za krótkie").nonempty("Miasto jest wymagane"),
 
   payerPostalCode: z
     .string()
     .min(3, "Kod pocztowy jest nieprawidłowy")
     .nonempty("Kod pocztowy jest wymagany"),
 
-  payerCountry: z
-    .string()
-    .min(2, "Kraj jest za krótki")
-    .nonempty("Kraj jest wymagany"),
+  payerCountry: z.string().min(2, "Kraj jest za krótki").nonempty("Kraj jest wymagany"),
 
   victimName: z
     .string()
     .min(2, "Imię i nazwisko jest za krótkie")
     .nonempty("Imię i nazwisko jest wymagane"),
 
-  victimPesel: z
-    .string()
-    .length(11, "PESEL musi zawierać 11 cyfr")
-    .nonempty("PESEL jest wymagany"),
+  victimPesel: z.string().length(11, "PESEL musi zawierać 11 cyfr").nonempty("PESEL jest wymagany"),
 
   victimDateOfBirth: z.string().nonempty("Data urodzenia jest wymagana"),
 
@@ -107,25 +92,16 @@ const formSchema = z.object({
     .min(3, "Tytuł ubezpieczenia jest za krótki")
     .nonempty("Tytuł ubezpieczenia jest wymagany"),
 
-  victimStreet: z
-    .string()
-    .min(2, "Ulica jest za krótka")
-    .nonempty("Ulica jest wymagana"),
+  victimStreet: z.string().min(2, "Ulica jest za krótka").nonempty("Ulica jest wymagana"),
 
-  victimCity: z
-    .string()
-    .min(2, "Miasto jest za krótkie")
-    .nonempty("Miasto jest wymagane"),
+  victimCity: z.string().min(2, "Miasto jest za krótkie").nonempty("Miasto jest wymagane"),
 
   victimPostalCode: z
     .string()
     .min(3, "Kod pocztowy jest nieprawidłowy")
     .nonempty("Kod pocztowy jest wymagany"),
 
-  victimCountry: z
-    .string()
-    .min(2, "Kraj jest za krótki")
-    .nonempty("Kraj jest wymagany"),
+  victimCountry: z.string().min(2, "Kraj jest za krótki").nonempty("Kraj jest wymagany"),
 
   accidentDate: z.string().nonempty("Data zdarzenia jest wymagana"),
 
@@ -140,18 +116,16 @@ const formSchema = z.object({
     .nonempty("Opis zdarzenia jest wymagany"),
 
   isWorkAccident: z.boolean(),
-  isVictimFault: z
-    .string()
-    .nonempty("Informacja o winie poszkodowanego jest wymagana"),
+  isVictimFault: z.string().nonempty("Informacja o winie poszkodowanego jest wymagana"),
 
   substancesStatus: z.enum(["no", "yes"], {
     errorMap: () => ({ message: "Wybierz jedną z opcji" }),
   }),
 
   substancesDetails: z.string().optional(),
-});
+})
 
-type FormValues = z.infer<typeof formSchema>;
+type FormValues = z.infer<typeof formSchema>
 
 // -------------------------------------------------------
 //  PAGE
@@ -190,41 +164,34 @@ export default function Page() {
       substancesStatus: "no",
       substancesDetails: "",
     },
-  });
+  })
 
   function onSubmit(values: FormValues) {
-    console.log("FORMULARZ →", values);
-    alert("Zgłoszenie zostało poprawnie wysłane.");
+    console.log("FORMULARZ →", values)
+    alert("Zgłoszenie zostało poprawnie wysłane.")
   }
 
   return (
-    <div className="max-w-4xl mx-auto py-12 space-y-12">
-      <h1 className="text-3xl font-bold text-gray-800">
-        Formularz zgłoszenia wypadku
-      </h1>
+    <div className="mx-auto max-w-4xl space-y-12 py-12">
+      <h1 className="text-3xl font-bold text-gray-800">Formularz zgłoszenia wypadku</h1>
       <p className="text-gray-700">
-        Wypełnij wszystkie pola zgodnie z prawdą. Pola obowiązkowe muszą być
-        uzupełnione.
+        Wypełnij wszystkie pola zgodnie z prawdą. Pola obowiązkowe muszą być uzupełnione.
       </p>
 
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-12">
-
           {/* -------------------------------------------------
               I. DANE SPRAWY
           --------------------------------------------------*/}
-          <Card className="border border-gray-300 rounded-none">
+          <Card className="rounded-none border border-gray-300">
             <CardHeader>
-              <CardTitle className="text-xl font-bold text-gray-800">
-                I. Dane sprawy
-              </CardTitle>
-              <p className="text-gray-600 text-sm">
+              <CardTitle className="text-xl font-bold text-gray-800">I. Dane sprawy</CardTitle>
+              <p className="text-sm text-gray-600">
                 Podstawowe informacje identyfikacyjne zgłoszenia.
               </p>
             </CardHeader>
 
-            <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-6">
-
+            <CardContent className="grid grid-cols-1 gap-6 md:grid-cols-2">
               <FormField
                 control={form.control}
                 name="caseNumber"
@@ -238,25 +205,21 @@ export default function Page() {
                   </FormItem>
                 )}
               />
-
             </CardContent>
           </Card>
 
           {/* -------------------------------------------------
               II. DANE PŁATNIKA
           --------------------------------------------------*/}
-          <Card className="border border-gray-300 rounded-none">
+          <Card className="rounded-none border border-gray-300">
             <CardHeader>
-              <CardTitle className="text-xl font-bold text-gray-800">
-                II. Dane płatnika
-              </CardTitle>
-              <p className="text-gray-600 text-sm">
+              <CardTitle className="text-xl font-bold text-gray-800">II. Dane płatnika</CardTitle>
+              <p className="text-sm text-gray-600">
                 Informacje o płatniku składek oraz jego adres.
               </p>
             </CardHeader>
 
-            <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-6">
-
+            <CardContent className="grid grid-cols-1 gap-6 md:grid-cols-2">
               <FormField
                 control={form.control}
                 name="payerName"
@@ -403,25 +366,21 @@ export default function Page() {
                   </FormItem>
                 )}
               />
-
             </CardContent>
           </Card>
 
           {/* -------------------------------------------------
               III. DANE POSZKODOWANEGO
           --------------------------------------------------*/}
-          <Card className="border border-gray-300 rounded-none">
+          <Card className="rounded-none border border-gray-300">
             <CardHeader>
               <CardTitle className="text-xl font-bold text-gray-800">
                 III. Dane poszkodowanego
               </CardTitle>
-              <p className="text-gray-600 text-sm">
-                Informacje osobowe i adres poszkodowanego.
-              </p>
+              <p className="text-sm text-gray-600">Informacje osobowe i adres poszkodowanego.</p>
             </CardHeader>
 
-            <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-6">
-
+            <CardContent className="grid grid-cols-1 gap-6 md:grid-cols-2">
               <FormField
                 control={form.control}
                 name="victimName"
@@ -570,27 +529,22 @@ export default function Page() {
                   </FormItem>
                 )}
               />
-
             </CardContent>
           </Card>
 
           {/* -------------------------------------------------
               IV. INFORMACJE O ZDARZENIU
           --------------------------------------------------*/}
-          <Card className="border border-gray-300 rounded-none">
+          <Card className="rounded-none border border-gray-300">
             <CardHeader>
               <CardTitle className="text-xl font-bold text-gray-800">
                 IV. Informacje o zdarzeniu
               </CardTitle>
-              <p className="text-gray-600 text-sm">
-                Szczegółowy opis okoliczności zdarzenia.
-              </p>
+              <p className="text-sm text-gray-600">Szczegółowy opis okoliczności zdarzenia.</p>
             </CardHeader>
 
             <CardContent className="space-y-6">
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-
+              <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
                 <FormField
                   control={form.control}
                   name="accidentDate"
@@ -618,7 +572,6 @@ export default function Page() {
                     </FormItem>
                   )}
                 />
-
               </div>
 
               <FormField
@@ -679,7 +632,7 @@ export default function Page() {
                       Czy poszkodowany był pod wpływem alkoholu lub środków odurzających?
                     </FormLabel>
                     <FormControl>
-                      <div className="flex flex-col gap-2 mt-2">
+                      <div className="mt-2 flex flex-col gap-2">
                         <label className="flex items-center gap-2">
                           <input
                             type="radio"
@@ -714,18 +667,13 @@ export default function Page() {
                     <FormItem>
                       <FormLabel>Opis stwierdzonych faktów</FormLabel>
                       <FormControl>
-                        <Textarea
-                          rows={3}
-                          {...field}
-                          className={govInputClass}
-                        />
+                        <Textarea rows={3} {...field} className={govInputClass} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
                   )}
                 />
               )}
-
             </CardContent>
           </Card>
 
@@ -735,14 +683,13 @@ export default function Page() {
           <div className="flex justify-end">
             <Button
               type="submit"
-              className="px-8 py-5 text-lg bg-blue-700 hover:bg-blue-800 rounded-none"
+              className="rounded-none bg-blue-700 px-8 py-5 text-lg hover:bg-blue-800"
             >
               Wyślij zgłoszenie
             </Button>
           </div>
-
         </form>
       </Form>
     </div>
-  );
+  )
 }
