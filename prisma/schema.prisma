@@ -21,14 +21,17 @@ model Case {
   victimInfo   VictimInfo @relation(fields: [victimInfoId], references: [id])
   victimInfoId String
 
-  accidentInfo AccidentInfo @relation(fields: [accidentInfoId], references: [id])
+  reporterInfo   ReporterInfo @relation(fields: [reporterInfoId], references: [id])
+  reporterInfoId String
+
+  accidentInfo   AccidentInfo @relation(fields: [accidentInfoId], references: [id])
+  accidentInfoId String
 
   cardOfAccident   File?   @relation(fields: [cardOfAccidentId], references: [id])
   cardOfAccidentId String?
 
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
-  accidentInfoId String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 // MARK: Poszkodowany
@@ -62,6 +65,7 @@ model ReporterInfo {
   address     Address[]
 
   accidentInfoId String
+  cases          Case[]
 }
 
 // MARK: Accident information
