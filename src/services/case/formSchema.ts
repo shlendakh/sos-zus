@@ -1,50 +1,47 @@
 import { z } from "zod"
-import { zfd } from "zod-form-data"
 import { DocumentType } from "../../../prisma/prisma/enums"
 
-export const formSchema = zfd.formData({
-  caseNumber: zfd.text(),
+export const formSchema = z.object({
+  caseNumber: z.string(),
 
-  payerName: zfd.text(),
-  payerDocumentType: zfd.text(z.enum(Object.values(DocumentType))),
-  payerDocumentNumber: zfd.text(),
-  payerAddressStreet: zfd.text(),
-  payerAddressCity: zfd.text(),
-  payerAddressPostalCode: zfd.text(),
-  payerAddressCountry: zfd.text(),
-  payerNip: zfd.text(),
-  payerRegon: zfd.text().optional(),
-  payerPesel: zfd.text().optional(),
+  payerName: z.string(),
+  payerDocumentType: z.enum(Object.values(DocumentType)),
+  payerDocumentNumber: z.string(),
+  payerAddressStreet: z.string(),
+  payerAddressCity: z.string(),
+  payerAddressPostalCode: z.string(),
+  payerAddressCountry: z.string(),
+  payerNip: z.string(),
+  payerRegon: z.string().optional(),
+  payerPesel: z.string().optional(),
 
-  victimName: zfd.text(),
-  victimDocumentType: zfd.text(z.enum(Object.values(DocumentType))),
-  victimDocumentNumber: zfd.text(),
-  victimAddressStreet: zfd.text(),
-  victimAddressCity: zfd.text(),
-  victimAddressPostalCode: zfd.text(),
-  victimAddressCountry: zfd.text(),
-  victimPesel: zfd.text(),
-  victimInsuranceTitle: zfd.text(),
-  victimDateOfBirth: zfd.text(z.date()),
-  victimPlaceOfBirth: zfd.text(),
+  victimName: z.string(),
+  victimDocumentType: z.enum(Object.values(DocumentType)),
+  victimDocumentNumber: z.string(),
+  victimAddressStreet: z.string(),
+  victimAddressCity: z.string(),
+  victimAddressPostalCode: z.string(),
+  victimAddressCountry: z.string(),
+  victimPesel: z.string(),
+  victimInsuranceTitle: z.string(),
+  victimDateOfBirth: z.coerce.date(),
+  victimPlaceOfBirth: z.string(),
 
-  accidentDate: zfd.text(z.date()),
-  accidentNameOfReporter: zfd.text(),
-  accidentDescription: zfd.text(),
-  isWorkAccident: zfd.checkbox(),
-  isVictimFault: zfd.text(),
-  isDrunk: zfd.text(),
+  accidentDate: z.coerce.date(),
+  accidentNameOfReporter: z.string(),
+  accidentDescription: z.string(),
+  isWorkAccident: z.boolean(),
+  isVictimFault: z.string(),
+  isDrunk: z.string(),
 
-  witness: zfd.repeatable(
-    z.array(
-      z.object({
-        name: zfd.text(),
-        contact: zfd.text(),
-      }),
-    ),
+  witness: z.array(
+    z.object({
+      name: z.string(),
+      contact: z.string(),
+    }),
   ),
 
-  file: zfd.file(),
+  file: z.any(),
 })
 
-export type FormSchema = z.infer<typeof formSchema>
+export type FormSchema = z.input<typeof formSchema>
