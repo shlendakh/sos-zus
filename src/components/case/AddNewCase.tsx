@@ -13,20 +13,26 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
+
 import { FileStep } from "./steps/FileStep"
+import { useState } from "react"
+import { SummaryStep } from "./steps/SummaryStep"
+import { WitnessStep } from "./steps/WitnessStep"
+import { AccidentStep } from "./steps/AccidentStep"
+import { VictimInfoStep } from "./steps/VictimInfoStep"
+import { ReporterInfoStep } from "./steps/ReporterInfoStep"
 
 export function AddNewCase() {
   const steps: { title: string; content: React.ReactNode | null; enabled: boolean }[] = [
     { title: "Załącz plik (opcjonalnie)", content: <FileStep />, enabled: true },
-    { title: "Dane płatnika", content: null, enabled: true },
-    { title: "Dane poszkodowanego", content: null, enabled: true },
-    { title: "Szczegóły zdarzenia", content: null, enabled: true },
-    { title: "Świadkowie", content: null, enabled: true },
-    { title: "Podsumowanie", content: null, enabled: true },
-  ]
-  const [currentStep, setCurrentStep] = React.useState(0)
+    { title: "Dane poszkodowanego", content: <VictimInfoStep />, enabled: true },
+    { title: "Dane zgłaszającego", content: <ReporterInfoStep />, enabled: true },
+    { title: "Szczegóły zdarzenia", content: <AccidentStep />, enabled: true },
+    { title: "Świadkowie", content: <WitnessStep />, enabled: true },
+    { title: "Podsumowanie", content: <SummaryStep />, enabled: true },
+  ].filter((step) => step.enabled)
+
+  const [currentStep, setCurrentStep] = useState(0)
 
   const isLastStep = currentStep === steps.length - 1
 
