@@ -18,9 +18,7 @@ model Case {
   caseNumber String
   comments   String? // Functionary notes
 
-  payerInfo    PayerInfo  @relation(fields: [payerInfoId], references: [id])
   victimInfo   VictimInfo @relation(fields: [victimInfoId], references: [id])
-  payerInfoId  String
   victimInfoId String
 
   accidentInfo AccidentInfo @relation(fields: [accidentInfoId], references: [id])
@@ -33,27 +31,12 @@ model Case {
   accidentInfoId String
 }
 
-// MARK: Płatnik
-model PayerInfo {
-  id             String       @id @default(cuid())
-  payerName      String // Name & surname or name of the company
-  documentType   DocumentType
-  documentNumber String
-
-  nip   String
-  regon String?
-  pesel String?
-
-  address   Address @relation(fields: [addressId], references: [id])
-  addressId String
-  cases     Case[]
-}
-
 // MARK: Poszkodowany
 model VictimInfo {
-  id    String @id @default(cuid())
-  name  String
-  pesel String
+  id      String @id @default(cuid())
+  name    String
+  surname String
+  pesel   String
 
   dateOfBirth  DateTime
   placeOfBirth String
@@ -63,19 +46,43 @@ model VictimInfo {
 
   insuranceTitle String
 
-  address   Address @relation(fields: [addressId], references: [id])
-  addressId String
-  cases     Case[]
+  address Address[]
+  cases   Case[]
+}
+
+// MARK: Informacje o zgłaszającym
+model ReporterInfo {
+  id          String   @id @default(cuid())
+  name        String
+  surname     String
+  pesel       String
+  dateOfBirth DateTime
+
+  phoneNumber String?
+  address     Address[]
+
+  accidentInfoId String
 }
 
 // MARK: Accident information
 
 model AccidentInfo {
-  id             String   @id @default(cuid())
-  date           DateTime
-  nameOfReporter String
+  id   String   @id @default(cuid())
+  date DateTime
 
-  info String // All details about the accident
+  place       String
+  workStartAt Int
+  workEndAt   Int
+
+  injuries String // Description of injuries
+  info     String // All details about the accident
+
+  isMedicalAssistance String? // If yes, describe
+  authority           String
+
+  machineOperations   String? // If yes, describe
+  isMachineAtestated  Boolean?
+  isMachineFixedAsset Boolean?
 
   witnesses Witness[]
 
@@ -87,10 +94,16 @@ model AccidentInfo {
 }
 
 // MARK: Utils
-
 enum DocumentType {
   PERSONAL_ID
   PASSPORT
+}
+
+enum AddressType {
+  HOME
+  CORESSPONDENCE
+  BUSINESS
+  CHILD_CARE
 }
 
 model Address {
@@ -98,10 +111,14 @@ model Address {
   street     String
   city       String
   postalCode String
+  district   String
   country    String
 
-  reporterInfos PayerInfo[]
+  type AddressType
+
   victimInfos   VictimInfo[]
+  reporterInfos ReporterInfo[]
+  witnesses     Witness[]
 }
 
 model File {
@@ -118,7 +135,10 @@ model File {
 model Witness {
   id      String @id @default(cuid())
   name    String
-  contact String
+  surname String
+
+  address   Address @relation(fields: [addressId], references: [id])
+  addressId String
 
   accidentInfo   AccidentInfo @relation(fields: [accidentInfoId], references: [id])
   accidentInfoId String
