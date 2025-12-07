@@ -47,7 +47,8 @@ model VictimInfo {
   documentType   DocumentType
   documentNumber String
 
-  insuranceTitle String
+  // insuranceTitle String
+  phoneNumber String?
 
   address Address[]
   cases   Case[]
@@ -61,11 +62,10 @@ model ReporterInfo {
   pesel       String
   dateOfBirth DateTime
 
-  phoneNumber String?
-  address     Address[]
+  address Address[]
 
-  accidentInfoId String
-  cases          Case[]
+  // accidentInfoId String
+  cases Case[]
 }
 
 // MARK: Accident information
@@ -90,10 +90,6 @@ model AccidentInfo {
 
   witnesses Witness[]
 
-  isWorkAccident Boolean
-  isVictimFault  String
-  isDrunk        String
-
   cases Case[]
 }
 
@@ -106,6 +102,7 @@ enum DocumentType {
 enum AddressType {
   HOME
   CORESSPONDENCE
+  LAST_KNOWN
   BUSINESS
   CHILD_CARE
 }
