@@ -2,7 +2,6 @@
 import CaseDetailsSectionOne from "./CaseDetailsSectionOne.client";
 import CaseDetailsSectionTwo from "./CaseDetailsSectionTwo.client";
 import CaseDetailsSectionThree from "./CaseDetailsSectionThree.client";
-import CaseDetailsSectionFour from "./CaseDetailsSectionFour.client";
 import { useQuery } from "@tanstack/react-query";
 import { fetchCase } from "@/services/cases/case.actions";
 
@@ -28,6 +27,7 @@ const { data, isError, isLoading } = useQuery({
     <main>
       <CaseDetailsSectionOne data={data.payerInfo}/>
       <CaseDetailsSectionTwo data={data.victimInfo}/>
+      <CaseDetailsSectionThree data={data.accidentInfo}/>
     </main>
   );
 }

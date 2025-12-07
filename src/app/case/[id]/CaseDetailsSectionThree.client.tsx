@@ -1,76 +1,94 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { User, MapPin, FileText, CreditCard } from "lucide-react";
-import DataRow from "./DataRow.client";
+import { Card, CardContent } from "@/components/ui/card";
+import { Eye, AlertTriangle } from "lucide-react";
+import DataTable from "./DataTable.client";
+import SectionHeader from "./SectionHeader.client";
+import BooleanBadge from "./BooleanBadge.client";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { Prisma } from "../../../../prisma/prisma/client";
 
-interface PayerData {
-  firstName: string;
-  lastName: string;
-  city: string;
-  street: string;
-  postalCode: string;
-  nip: string;
-  regon: string;
-  pesel: string;
-  documentType: "dowód osobisty" | "paszport";
-  documentSeries: string;
+type AccidentWithWitnesses = Prisma.AccidentInfoGetPayload<{
+  include: { witnesses: true }
+}>
+interface CaseDetailsSectionThreeProps {
+  data: AccidentWithWitnesses;
 }
+const PRIMARY_COLOR = "#007834";
+const formatDateTime = (date: Date) => {
+    return date.toLocaleString("pl-PL", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+  };
 
-interface PayerIdentificationCardProps {
-  data: PayerData;
-}
-
-
-const SectionHeader = ({ icon: Icon, title }: { icon: React.ElementType; title: string }) => (
-  <div className="flex items-center gap-2 mb-4 pb-2 border-b border-primary/20">
-    <div className="p-2 rounded-lg bg-primary/10">
-      <Icon className="h-4 w-4 text-primary" />
-    </div>
-    <h3 className="text-sm font-semibold text-foreground uppercase tracking-wide">{title}</h3>
-  </div>
-);
-
-export const CaseDetailsSectionThree = ({ data }: PayerIdentificationCardProps) => {
+export const CaseDetailsSectionThree = ({ data }: CaseDetailsSectionThreeProps) => {
   return (
-    <Card className="w-full max-w-2xl shadow-lg border-border/50">
-      <CardHeader className="bg-primary/5 border-b border-border/50">
-        <CardTitle className="flex items-center gap-3 text-xl">
-          <div className="p-2.5 rounded-xl bg-primary/10">
-            <User className="h-5 w-5 text-primary" />
-          </div>
-          Dane identyfikacyjne płatnika składek
-        </CardTitle>
-      </CardHeader>
-      <CardContent className="p-6 space-y-6">
-        {/* Dane osobowe */}
-        <div>
-          <SectionHeader icon={User} title="Dane osobowe" />
-          <DataRow label="Imię i nazwisko" value={`${data.firstName} ${data.lastName}`} />
-          <DataRow label="PESEL" value={data.pesel} />
+    <div>
+    <Card className="shadow-md border-0 overflow-hidden lg:col-span-2">
+            <SectionHeader 
+              icon={AlertTriangle} 
+              title="Informacje o Wypadku" 
+              badge="AccidentInfo"
+            />
+            <CardContent className="p-0">
+              <DataTable data={[
+                { label: "ID zdarzenia", value: data.id },
+                { label: "Data i godzina wypadku", value: formatDateTime(data.date) },
+                { label: "Zgłaszający", value: data.nameOfReporter },
+                { label: "Wypadek przy pracy", value: <BooleanBadge value={data.isWorkAccident} /> },
+                { label: "Wina poszkodowanego", value: <BooleanBadge value={data.isVictimFault} /> },
+                { label: "Stan nietrzeźwości", value: <BooleanBadge value={data.isDrunk} /> },
+              ]} />
+
+              <div className="p-4">
+                <p className="text-sm font-medium text-gray-600 mb-2">Opis zdarzenia:</p>
+                <p className="text-sm text-gray-800 bg-gray-50 p-3 rounded-lg border">
+                  {data.info}
+                </p>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card className="shadow-md border-0 overflow-hidden">
+            <SectionHeader 
+              icon={Eye} 
+              title="Lista Świadków" 
+              badge={`Witness (${data.witnesses.length})`}
+            />
+            <CardContent className="p-0">
+              <Table>
+                <TableHeader>
+                  <TableRow style={{ backgroundColor: `${PRIMARY_COLOR}05` }}>
+                    <TableHead className="font-semibold text-gray-700">Imię i nazwisko</TableHead>
+                    <TableHead className="font-semibold text-gray-700">Kontakt</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {data.witnesses.map((witness) => (
+                    <TableRow key={witness.id} className="hover:bg-gray-50">
+                      <TableCell className="font-medium text-gray-900">
+                        {witness.name}
+                      </TableCell>
+                      <TableCell className="text-gray-600">
+                        {witness.contact}
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </CardContent>
+          </Card>
         </div>
 
-        {/* Adres siedziby */}
-        <div>
-          <SectionHeader icon={MapPin} title="Adres siedziby" />
-          <DataRow label="Ulica" value={data.street} />
-          <DataRow label="Miasto" value={data.city} />
-          <DataRow label="Kod pocztowy" value={data.postalCode} />
-        </div>
-
-        {/* Dane rejestrowe */}
-        <div>
-          <SectionHeader icon={FileText} title="Dane rejestrowe" />
-          <DataRow label="NIP" value={data.nip} />
-          <DataRow label="REGON" value={data.regon} />
-        </div>
-
-        {/* Dokument tożsamości */}
-        <div>
-          <SectionHeader icon={CreditCard} title="Dokument tożsamości" />
-          <DataRow label="Typ dokumentu" value={data.documentType} />
-          <DataRow label="Seria i numer" value={data.documentSeries} />
-        </div>
-      </CardContent>
-    </Card>
   );
 };
 
