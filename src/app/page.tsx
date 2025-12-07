@@ -11,6 +11,7 @@ import {
   TableRow,
 } from "@/components/ui/table"
 import Link from "next/link"
+import { AddNewCase } from "@/components/case/AddNewCase"
 
 export default function Home() {
   const invoices = [
@@ -60,10 +61,11 @@ export default function Home() {
 
   return (
     <div>
-      <Card className="w-full p-8">
+      <Card className="mb-8 flex w-full flex-row items-center justify-between p-8">
         <p className="mt-4 text-lg">
           Aplikacja do zarządzania i obsługi szkód w Zakładzie Ubezpieczeń Społecznych.
         </p>
+        <AddNewCase />
       </Card>
 
       <Table>
@@ -95,10 +97,6 @@ export default function Home() {
           </TableRow>
         </TableFooter>
       </Table>
-
-      <Link href="/form">
-        <Button variant="outline">Kilknij</Button>
-      </Link>
     </div>
   )
 }
