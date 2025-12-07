@@ -36,7 +36,6 @@ const formSchema = z.object({
 })
 
 export default function Page() {
-
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -75,7 +74,7 @@ export default function Page() {
   }
 
   return (
-    <div className="max-w-xl mx-auto mt-10">
+    <div className="mx-auto mt-10 max-w-xl">
       <Card>
         <CardHeader>
           <CardTitle>Zgłoszenie szkody</CardTitle>
@@ -83,11 +82,7 @@ export default function Page() {
 
         <CardContent>
           <Form {...form}>
-            <form
-              onSubmit={form.handleSubmit(onSubmit)}
-              className="space-y-4"
-            >
-
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
               {/* IMIĘ */}
               <FormField
                 control={form.control}
@@ -125,10 +120,7 @@ export default function Page() {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Rodzaj szkody</FormLabel>
-                    <Select
-                      onValueChange={field.onChange}
-                      defaultValue={field.value}
-                    >
+                    <Select onValueChange={field.onChange} defaultValue={field.value}>
                       <FormControl>
                         <SelectTrigger>
                           <SelectValue placeholder="Wybierz..." />
@@ -154,11 +146,7 @@ export default function Page() {
                   <FormItem>
                     <FormLabel>Opis zdarzenia</FormLabel>
                     <FormControl>
-                      <Textarea
-                        rows={4}
-                        placeholder="Opisz zdarzenie..."
-                        {...field}
-                      />
+                      <Textarea rows={4} placeholder="Opisz zdarzenie..." {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -188,7 +176,6 @@ export default function Page() {
               <Button type="submit" className="w-full">
                 Wyślij zgłoszenie
               </Button>
-
             </form>
           </Form>
         </CardContent>

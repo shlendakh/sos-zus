@@ -1,15 +1,13 @@
-import CaseDetails from "./CaseDetails.client";
+import CaseDetails from "./CaseDetails.client"
 
 interface Params {
-    params: {
-        id: string
-    };
+  params: {
+    id: string
+  }
 }
 
-export default async function Case({params}: Params) {
+export default async function Case({ params }: Params) {
   const id = params.id
 
-  return (
-    <CaseDetails id={id}/>
-  );
+  return <CaseDetails id={id} />
 }
