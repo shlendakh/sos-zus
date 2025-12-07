@@ -1,6 +1,7 @@
 import type { Metadata } from "next"
 import "./globals.css"
 import Providers from "@/components/Providers"
+import Navbar from "@/components/ui/navbar"
 
 export const metadata: Metadata = {
   title: "SOS ZUS | System obsługi szkód ZUS",
@@ -15,6 +16,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
+        <Navbar/>
         <Providers>{children}</Providers>
       </body>
     </html>
